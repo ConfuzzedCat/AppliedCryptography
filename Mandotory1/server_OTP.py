@@ -5,7 +5,7 @@ import OTP
 
 
 IP = ''
-PORT = 12001
+PORT = 12002
 
 KEY = ''
 KEY_FILE = 'key.txt'
@@ -34,10 +34,11 @@ try:
         message = ""
         bCloseConnection = False
         while not bCloseConnection:
-            message = OTP.decrypt(conn_socket.recv(2048).decode(), KEY)
-            conn_socket.send(OTP.encrypt(message, KEY).encode())
-            print("connection received from {}, and {} is sent back".format(client_address[1], message))
-            if message == "bye":
+            recv_msg = conn_socket.recv(2048).decode()
+            message = OTP.decrypt(recv_msg, KEY)
+            conn_socket.send(OTP.encrypt("From client: " + message, KEY).encode())
+            print("connection received from {}, and '{}' is sent back".format(client_address[1], message))
+            if recv_msg == "bye" or message == "bye":
                 bCloseConnection = True
         conn_socket.close()
 except KeyboardInterrupt:

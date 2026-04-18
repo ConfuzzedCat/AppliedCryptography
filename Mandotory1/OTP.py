@@ -1,13 +1,8 @@
-def encrypt(plaintext, key):
-    if len(plaintext) > len(key):
-        cur_pos = 0
-        while len(plaintext) > len(key):
-            key += key[cur_pos]
-            cur_pos = (cur_pos + 1) % len(key)
-    ciphertext = ""
-    for i, char in enumerate(plaintext):
-        ciphertext += chr((ord(char) ^ ord(key[i])) + ord('a') % ord('a'))
+def encrypt(plaintext: str, keyword: str) -> str:
+    keyword = (keyword * ((len(plaintext) // len(keyword)) + 1))[:len(plaintext)]
+    ciphertext = ''.join(chr((ord(p) ^ ord(k)) % 256) for p, k in zip(plaintext, keyword))
     return ciphertext
 
-def decrypt(ciphertext, key):
-    return encrypt(ciphertext, key)
+
+def decrypt(ciphertext: str, keyword: str) -> str:
+    return encrypt(ciphertext, keyword)
